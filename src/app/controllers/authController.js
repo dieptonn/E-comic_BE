@@ -5,7 +5,7 @@ const { response } = require('express');
 const login = (req, res) => {
     const data = req.body;
     console.log(data);
-    res.json(data);
+    return res.json(data);
 };
 
 module.exports = { login };

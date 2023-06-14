@@ -2,14 +2,19 @@ const express = require('express');
 const morgan = require('morgan');
 const multer = require('multer');
 const route = require('./routes');
+const cors = require('cors');
 
 const db = require('./config/db');
 db.connect();
 
 const app = express();
 const port = 8000;
-
 const upload = multer();
+
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+}));
 app.use(upload.none());
 
 app.use(

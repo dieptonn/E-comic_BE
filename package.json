@@ -19,6 +19,7 @@
     "morgan": "^1.10.0"
   },
   "devDependencies": {
+    "cors": "^2.8.5",
     "mongoose": "^7.2.4",
     "mongoose-delete": "^1.0.1",
     "mongoose-slug-updater": "^3.3.0",
