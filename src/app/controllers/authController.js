@@ -8,4 +8,11 @@ const login = (req, res) => {
     return res.json(data);
 };
 
-module.exports = { login };
+const signup = async (req, res) => {
+    const data = req.body;
+    // console.log(data);
+    const message = await authService.createNewUser(data);
+    return res.send(message);
+};
+
+module.exports = { login, signup };
