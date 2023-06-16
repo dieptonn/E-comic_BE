@@ -1,18 +1,16 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-// const slug = require('mongoose-slug-updater');
-// mongoose.plugin(slug);
-const mongooseDelete = require('mongoose-delete');
+const slug = require('mongoose-slug-updater');
+mongoose.plugin(slug);
+// const mongooseDelete = require('mongoose-delete');
 
 const UserSchema = new Schema(
     {
-        // _id: { type: Number },
         name: {
             type: String,
             maxLength: 255,
             required: [true, 'Please enter your name'],
             trim: true,
-            unique: true,
         },
         email: {
             type: String,
@@ -36,11 +34,18 @@ const UserSchema = new Schema(
             maxLength: 10,
         },
         phoneNumber: { type: String, maxLength: 10, validate: /^[0-9]{10}$/ },
+        role: {
+            type: String,
+            enum: ['user', 'guest', 'admin'],
+            default: 'user',
+        },
+        slug: { type: String, slug: 'email', unique: true },
     },
     {
-        // _id: false,
         timestamps: true,
     },
 );
+
+
 
 module.exports = mongoose.model('User', UserSchema);
