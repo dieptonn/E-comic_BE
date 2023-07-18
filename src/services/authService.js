@@ -4,27 +4,26 @@ const jwt = require('jsonwebtoken');
 const salt = bcrypt.genSaltSync(10);
 
 const createNewUser = async (data) => {
-    
-        try {
-            const hashPassword = await hashUserPassword(data.password);
-            newUser = await User.create({
-                name: data.name,
-                email: data.email,
-                password: hashPassword,
-                image: data.image,
-                address: data.address,
-                gender: data.gender === '1' ? 'male' : 'female',
-                phoneNumber: data.phoneNumber,
-                role: 'user',
-                // slug: slug,
-            });
-            const token = generateToken(newUser._id);
-            return {
-                token
-            };
-        } catch (error) {
-            throw error;
-        }
+    try {
+        const hashPassword = await hashUserPassword(data.password);
+        newUser = await User.create({
+            name: data.name,
+            email: data.email,
+            password: hashPassword,
+            image: data.image,
+            address: data.address,
+            gender: data.gender === '1' ? 'male' : 'female',
+            phoneNumber: data.phoneNumber,
+            role: 'user',
+            // slug: slug,
+        });
+        const token = generateToken(newUser._id);
+        return {
+            token,
+        };
+    } catch (error) {
+        throw error;
+    }
 };
 
 const generateToken = (userId) => {
@@ -35,13 +34,12 @@ const generateToken = (userId) => {
 };
 
 const hashUserPassword = async (password) => {
-    
-        try {
-            const hashPassword = await bcrypt.hashSync(password, salt);
-            return hashPassword;
-        } catch (error) {
-            throw error;
-        }
+    try {
+        const hashPassword = await bcrypt.hashSync(password, salt);
+        return hashPassword;
+    } catch (error) {
+        throw error;
+    }
 };
 
 const authLogin = () => {};

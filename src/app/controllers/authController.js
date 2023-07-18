@@ -4,7 +4,6 @@ const { response } = require('express');
 const bcrypt = require('bcryptjs');
 // const jwt = require('jsonwebtoken');
 
-
 const login = async (req, res) => {
     const dataLogin = req.body;
     try {
@@ -16,7 +15,10 @@ const login = async (req, res) => {
         }
 
         // Kiểm tra mật khẩu
-        const isPasswordValid = await bcrypt.compare(dataLogin.password, user.password);
+        const isPasswordValid = await bcrypt.compare(
+            dataLogin.password,
+            user.password,
+        );
         // console.log(isPasswordValid);
 
         if (!isPasswordValid) {
@@ -25,18 +27,17 @@ const login = async (req, res) => {
 
         // Tạo token
         const token = authService.generateToken(user._id);
-        const data = {token};
+        const data = { token };
 
         // Trả về thông tin người dùng và token
         return res.status(200).json({
             status: 'success',
-            data
+            data,
         });
     } catch (error) {
         return res.send('Login failed');
     }
 };
-
 
 const signup = async (req, res) => {
     const userData = req.body;
@@ -45,10 +46,12 @@ const signup = async (req, res) => {
         const data = await authService.createNewUser(userData);
         return res.status(200).json({
             status: 'success',
-            data
+            data,
         });
     } catch (error) {
-        return res.send('Please double check your information, maybe this account has been registered before');
+        return res.send(
+            'Please double check your information, maybe this account has been registered before',
+        );
     }
 };
 
