@@ -3,10 +3,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const salt = bcrypt.genSaltSync(10);
 
-const createNewUser = (data) => {
-    return new Promise(async (resolve, reject) => {
+const createNewUser = async (data) => {
+    
         try {
-            let hashPassword = await hashUserPassword(data.password);
+            const hashPassword = await hashUserPassword(data.password);
             newUser = await User.create({
                 name: data.name,
                 email: data.email,
@@ -19,11 +19,12 @@ const createNewUser = (data) => {
                 // slug: slug,
             });
             const token = generateToken(newUser._id);
-            resolve(token);
+            return {
+                token
+            };
         } catch (error) {
-            reject(error);
+            throw error;
         }
-    });
 };
 
 const generateToken = (userId) => {
@@ -33,15 +34,14 @@ const generateToken = (userId) => {
     return token;
 };
 
-const hashUserPassword = (password) => {
-    return new Promise(async (resolve, reject) => {
+const hashUserPassword = async (password) => {
+    
         try {
-            let hashPassword = await bcrypt.hashSync(password, salt);
-            resolve(hashPassword);
+            const hashPassword = await bcrypt.hashSync(password, salt);
+            return hashPassword;
         } catch (error) {
-            reject(error);
+            throw error;
         }
-    });
 };
 
 const authLogin = () => {};

@@ -6,6 +6,7 @@ const route = require('./routes');
 const cors = require('cors');
 
 const db = require('./config/db');
+const { verifyToken } = require('./app/middlewares/verifyToken');
 db.connect();
 
 const app = express();
@@ -14,11 +15,13 @@ const upload = multer();
 
 app.use(
     cors({
-        origin: 'http://127.0.0.1:3000',
+        origin: ['http://127.0.0.1:3000', 'exp://192.168.0.105:19000'],
         credentials: true,
     }),
 );
 app.use(upload.none());
+
+// app.use(verifyToken);
 
 app.use(
     express.urlencoded({

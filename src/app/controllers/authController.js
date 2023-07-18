@@ -25,9 +25,13 @@ const login = async (req, res) => {
 
         // Tạo token
         const token = authService.generateToken(user._id);
+        const data = {token};
 
         // Trả về thông tin người dùng và token
-        return res.json(token);
+        return res.status(200).json({
+            status: 'success',
+            data
+        });
     } catch (error) {
         return res.send('Login failed');
     }
@@ -35,11 +39,14 @@ const login = async (req, res) => {
 
 
 const signup = async (req, res) => {
-    const data = req.body;
+    const userData = req.body;
     // console.log(data);
     try {
-        const userData = await authService.createNewUser(data);
-        return res.json(userData);
+        const data = await authService.createNewUser(userData);
+        return res.status(200).json({
+            status: 'success',
+            data
+        });
     } catch (error) {
         return res.send('Please double check your information, maybe this account has been registered before');
     }
