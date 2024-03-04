@@ -3,17 +3,18 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const salt = bcrypt.genSaltSync(10);
 
-const createNewUser = async (data) => {
+
+const createNewUser = async (signupData) => {
     try {
-        const hashPassword = await hashUserPassword(data.password);
+        const hashPassword = await hashUserPassword(signupData.password);
         newUser = await User.create({
-            name: data.name,
-            email: data.email,
+            name: signupData.name,
+            email: signupData.email,
             password: hashPassword,
-            image: data.image,
-            address: data.address,
-            gender: data.gender === '1' ? 'male' : 'female',
-            phoneNumber: data.phoneNumber,
+            image: signupData.image,
+            address: signupData.address,
+            gender: signupData.gender === '1' ? 'male' : 'female',
+            phoneNumber: signupData.phoneNumber,
             role: 'user',
             // slug: slug,
         });
@@ -25,6 +26,38 @@ const createNewUser = async (data) => {
         throw error;
     }
 };
+
+const checkLogin = async (loginData) => {
+    try {
+        // Kiểm tra thông tin đăng nhập
+        const user = await User.findOne({ email: loginData.username });
+
+        if (!user) {
+            return res.send('Invalid email or password');
+        }
+
+        // Kiểm tra mật khẩu
+        const isPasswordValid = await bcrypt.compare(
+            loginData.password,
+            user.password,
+        );
+        // console.log(isPasswordValid);
+
+        if (!isPasswordValid) {
+            return res.send('Invalid email or password');
+        }
+
+        // Tạo token
+        const token = generateToken(user._id);
+
+        // Trả về thông tin người dùng và token
+        return {
+            token
+        }
+    } catch (error) {
+        throw error;
+    }
+}
 
 const generateToken = (userId) => {
     const token = jwt.sign({ userId }, process.env.SECRETKEY, {
@@ -42,6 +75,5 @@ const hashUserPassword = async (password) => {
     }
 };
 
-const authLogin = () => {};
 
-module.exports = { createNewUser, authLogin, generateToken };
+module.exports = { createNewUser, checkLogin };
